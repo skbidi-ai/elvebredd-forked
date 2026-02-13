@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Elvebredd</title>
+    <link rel="stylesheet" href="https://use.typekit.net/uju1lhj.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/signup.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <script src="/config.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/theme.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="center headerElement auto" style="padding-left:70rem;">
+                <button onclick="openMenuBar()" title="menu" class="center blank button lightHover">
+                    <img id="menuImage" alt="menu" src="/images/misc/menu.png">
+                </button>
+            </div>
+            <div class="center headerElement auto" style="position:absolute;left:50vw;transform:translateX(-50%)">
+                <button class="blank button lightHover">
+                    <a class="bland" href="/">
+                        <img id="headerLogo" src="/images/misc/logo.png">
+                    </a>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main id="signUpContainer">
+        <div class="formWrapper">
+            <div class="formBox">
+                <h1>Create Account</h1>
+                <form id="signUpForm">
+                    <div class="formGroup">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Choose a username">
+                    </div>
+                    <div class="formGroup">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="formGroup">
+                        <label for="confirmEmail">Confirm Email</label>
+                        <input type="email" id="confirmEmail" name="confirmEmail" required placeholder="Confirm your email">
+                    </div>
+                    <div class="formGroup">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a password">
+                    </div>
+                    <div class="formGroup">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    <div class="formGroup">
+                        <label for="robloxUsername">Roblox Username (Optional)</label>
+                        <input type="text" id="robloxUsername" name="robloxUsername" placeholder="Your Roblox username">
+                    </div>
+                    <div id="signUpMessage" class="message"></div>
+                    <button type="submit" class="submitBtn">Create Account</button>
+                </form>
+                <div class="linkSection">
+                    <p>Already have an account? <a href="/signin.html">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div id="linkSection">
+            <div id="legalLinks">
+                <a href="/tos.html">Terms of Service</a>
+                <a href="/support.html">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('signUpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const confirmEmail = document.getElementById('confirmEmail').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const robloxUsername = document.getElementById('robloxUsername').value;
+            
+            if (email !== confirmEmail) {
+                document.getElementById('signUpMessage').textContent = 'Emails do not match';
+                document.getElementById('signUpMessage').className = 'message error';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('signUpMessage').textContent = 'Passwords do not match';
+                document.getElementById('signUpMessage').className = 'message error';
+                return;
+            }
+            
+            try {
+                const response = await apiCall('/api/signup', 'POST', {
+                    username: username,
+                    email: email,
+                    password: password,
+                    robloxUsername: robloxUsername
+                });
+                
+                if (response.success) {
+                    sessionData.loggedIn = true;
+                    sessionData.userID = response.userID;
+                    sessionData.userData = response.userData;
+                    saveSession();
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('signUpMessage').textContent = response.message || 'Sign up failed';
+                    document.getElementById('signUpMessage').className = 'message error';
+                }
+            } catch (error) {
+                document.getElementById('signUpMessage').textContent = 'Error: ' + error.message;
+                document.getElementById('signUpMessage').className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>

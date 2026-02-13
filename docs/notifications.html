@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Elvebredd</title>
+    <link rel="stylesheet" href="https://use.typekit.net/uju1lhj.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <script src="/config.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/theme.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="center headerElement auto" style="padding-left:70rem;">
+                <button onclick="openMenuBar()" title="menu" class="center blank button lightHover">
+                    <img id="menuImage" alt="menu" src="/images/misc/menu.png">
+                </button>
+            </div>
+            <div class="center headerElement auto" style="position:absolute;left:50vw;transform:translateX(-50%)">
+                <button class="blank button lightHover">
+                    <a class="bland" href="/">
+                        <img id="headerLogo" src="/images/misc/logo.png">
+                    </a>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main id="notificationsContainer">
+        <h1>Notifications</h1>
+        <div class="notificationTypes">
+            <button class="typeBtn active" onclick="filterNotifications('all')">All</button>
+            <button class="typeBtn" onclick="filterNotifications('unread')">Unread</button>
+            <button class="typeBtn" onclick="filterNotifications('trades')">Trades</button>
+        </div>
+        <div id="notificationsList">
+            <!-- Notifications will be loaded via API -->
+        </div>
+    </main>
+
+    <footer>
+        <div id="linkSection">
+            <div id="legalLinks">
+                <a href="/tos.html">Terms of Service</a>
+                <a href="/support.html">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let allNotifications = [];
+
+        async function loadNotifications() {
+            if (!sessionData.loggedIn) {
+                window.location.href = '/signin.html';
+                return;
+            }
+
+            try {
+                const response = await apiCall(`/api/notifications?userID=${sessionData.userID}`);
+                allNotifications = response.notifications || [];
+                displayNotifications(allNotifications);
+            } catch (error) {
+                console.error('Failed to load notifications:', error);
+                document.getElementById('notificationsList').innerHTML = '<p>Failed to load notifications</p>';
+            }
+        }
+
+        function filterNotifications(filter) {
+            let filtered = allNotifications;
+            
+            if (filter === 'unread') {
+                filtered = allNotifications.filter(n => !n.read);
+            } else if (filter === 'trades') {
+                filtered = allNotifications.filter(n => n.type === 'trade');
+            }
+
+            displayNotifications(filtered);
+            
+            // Update active button
+            document.querySelectorAll('.typeBtn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notificationsList');
+            
+            if (!notifications || notifications.length === 0) {
+                container.innerHTML = '<p>No notifications</p>';
+                return;
+            }
+
+            let html = '<div class="notifications">';
+            notifications.forEach(notif => {
+                html += `
+                    <div class="notificationItem ${notif.read ? '' : 'unread'}">
+                        <img src="${notif.image || '/images/notifications/default.png'}" alt="notification">
+                        <div class="notifContent">
+                            <h4>${notif.title}</h4>
+                            <p>${notif.body}</p>
+                            <small>${notif.time || 'Just now'}</small>
+                        </div>
+                        <button onclick="markAsRead('${notif.id}')" class="markReadBtn">Mark as read</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        async function markAsRead(notifId) {
+            try {
+                await apiCall(`/api/notifications/read`, 'POST', { notificationID: notifId });
+                loadNotifications();
+            } catch (error) {
+                console.error('Failed to mark as read:', error);
+            }
+        }
+
+        // Load notifications on page load
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+    </script>
+</body>
+</html>

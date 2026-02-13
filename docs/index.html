@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elvebredd - Adopt Me Traders Hub</title>
+    <link rel="stylesheet" href="https://use.typekit.net/uju1lhj.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/inventory.css">
+    <script src="/config.js"></script>
+    <script src="/js/header.js"></script>
+    <script src="/js/footer.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/index.js"></script>
+</head>
+<body>
+    <header>
+        <div>
+            <nav>
+                <div class="center headerElement auto" style="padding-left:70rem;">
+                    <button onclick="openMenuBar()" title="menu image button" class="center blank button lightHover">
+                        <img id="menuImage" alt="menu image" src="/images/misc/menu.png">
+                    </button>
+                    <button onclick="openMenuBar()" title="menu text button" class="center blank button lightHover" style="padding-right:15rem;padding-bottom:7rem;">
+                        <p class="headerText" id="menuTextButton">Menu</p>
+                    </button>
+                    <div id="headerSearchBar">
+                        <div id="headerSearchBarMain">
+                            <input id="searchInput" placeholder="Search" autocomplete="off">
+                            <img id="searchIcon" src="/images/misc/search.png">
+                        </div>
+                        <div id="resultsPets">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="center headerElement auto" class="logoText" style="position:absolute;left:50vw;transform:translateX(-50%)">
+                    <button class="blank button lightHover">
+                        <a class="bland" href="/">
+                            <img id="headerLogo" src="/images/misc/logo.png">
+                        </a>
+                    </button>
+                </div>
+                <div class="loggedIn">
+                    <div class="center headerElement auto" style="padding-right: 70rem;">
+                        <div class="center" style="position:relative;">
+                            <div class="lightHover">
+                                <button id="notificationsDiv" onclick="displayNotifications();" class="blank button lightHover smallPadding">
+                                    <img id="notificationIcon" src="/images/misc/notification.png">
+                                    <div id="notificationCircle">
+                                        <div style="width:14rem;height:14rem;display:flex;justify-content:center;align-items:center;">
+                                            <p id="notificationCount"></p>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div id="notificationsMenu">
+                                <div>
+                                    <p>Notifications</p>
+                                    <div onclick="openDotsNotifications()">
+                                        <img src="/images/misc/more.png">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p id="noNotificationsMsg">You have no new notifications</p>
+                                </div>
+                                <div id="notificationsList">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="position:relative;">
+                            <button id="profileButton" onclick="toggleProfileMenu()" class="blank button lightHover smallPadding">
+                                <img id="profileImage" src="/images/profile/default.png">
+                            </button>
+                            <div id="profileMenu" style="display:none;">
+                                <a href="/userpage.html">My Profile</a>
+                                <a href="/inventory.html">My Inventory</a>
+                                <a href="/notifications.html">Notifications</a>
+                                <button onclick="logout()" class="logout-btn">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="loggedOut">
+                    <div class="center headerElement auto" style="padding-right: 70rem;">
+                        <button onclick="goTo('/signin.html')" class="blank button lightHover">
+                            <p class="headerText">Sign in</p>
+                        </button>
+                        <button onclick="goTo('/signup.html')" class="blank button lightHover">
+                            <p class="headerText">Sign up</p>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="slides">
+            <!-- Slide 1 -->
+            <div>
+                <figure></figure>
+                <div style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(253, 249, 234) 100%), url('/images/slides/slide_1.png')">
+                    <div>
+                        <div>
+                            <p style="color:rgb(253, 249, 234);font-size:54%;font-weight:700;">USED BY</p>
+                            <p style="color:rgb(253, 249, 234);font-size:216%;font-weight:800;top:5%">2M+</p>
+                            <p style="color:rgb(253, 249, 234);font-size:75.6%;font-weight:200;bottom:0%;">ADOPT ME TRADERS</p>
+                        </div>
+                        <div></div>
+                        <div>
+                            <button onclick="goTo('/search.html')" style="font-size:100%;margin:0px;height:100%;width:62%;border-radius:calc(var(--slide-size) / 10000 * 4.44 * 86);background:linear-gradient(135deg, rgb(243, 231, 214) 0%, rgb(235, 229, 220) 50%, rgb(253, 249, 234) 100%);border:1px solid rgb(54, 53, 55);">
+                                <p style="color:rgb(54, 53, 55);font-size:40.1%;width:100%;">Value calculator</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <figure></figure>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div>
+                <figure></figure>
+                <div style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(253, 249, 234) 100%), url('/images/slides/slide_2.png')">
+                    <div>
+                        <div>
+                            <p style="color:rgb(253, 249, 234);font-size:54%;font-weight:700;">TRADING</p>
+                            <p style="color:rgb(253, 249, 234);font-size:216%;font-weight:800;top:5%">MADE</p>
+                            <p style="color:rgb(253, 249, 234);font-size:75.6%;font-weight:200;bottom:0%;">EASY</p>
+                        </div>
+                        <div></div>
+                        <div>
+                            <button onclick="goTo('/search.html')" style="font-size:100%;margin:0px;height:100%;width:62%;border-radius:calc(var(--slide-size) / 10000 * 4.44 * 86);background:linear-gradient(135deg, rgb(243, 231, 214) 0%, rgb(235, 229, 220) 50%, rgb(253, 249, 234) 100%);border:1px solid rgb(54, 53, 55);">
+                                <p style="color:rgb(54, 53, 55);font-size:40.1%;width:100%;">Browse Listings</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <figure></figure>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div>
+                <figure></figure>
+                <div style="background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(253, 249, 234) 100%), url('/images/slides/slide_3.png')">
+                    <div>
+                        <div>
+                            <p style="color:rgb(253, 249, 234);font-size:calc(16.6 * 3000 / 1920 * 1%);font-weight:800;top:43%">GET THE REAL</p>
+                            <p style="color:rgb(253, 249, 234);font-size:calc(66.2 * 3000 / 1920 * 1%);font-weight:800;top:50%">EXPERIENCE</p>
+                        </div>
+                        <div></div>
+                        <div>
+                            <button onclick="goTo('/signup.html')" style="font-size:100%;margin:0px;height:100%;width:62%;border-radius:calc(var(--slide-size) / 10000 * 4.44 * 86);background:linear-gradient(135deg, rgb(243, 231, 214) 0%, rgb(235, 229, 220) 50%, rgb(253, 249, 234) 100%);border:1px solid rgb(54, 53, 55);">
+                                <p style="color:rgb(54, 53, 55);font-size:calc(22.9 * 3000 / 1920 * 1%);width:100%;">Join Now</p>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <p style="color:rgb(253, 249, 234);font-size:316%;font-weight:800;top:0%">2k+</p>
+                            <p style="color:rgb(253, 249, 234);font-size:126%;font-weight:300;top:90%">MEMBERS!</p>
+                            <p style="background-color:rgb(253, 249, 234);width:30%;aspect-ratio:1/1;top:25%;left:34%;border-radius:20%;"></p>
+                            <img src="/images/misc/discordLogoPink.png" style="width:21.75%;height:auto;top:40%;left:38%;">
+                        </div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <figure></figure>
+            </div>
+        </div>
+
+        <div id="recentTrades">
+            <p>Recent Trades</p>
+            <div id="tradesContainer">
+                <!-- Trades will be loaded via API -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div id="linkSection">
+            <img id="logooo" src="/images/misc/ElvebreddLogoCut.svg" alt="Elvebredd logo">
+            <div id="linksss">
+                <a id="yt" href="https://www.youtube.com/@Elvebredd/featured" target="_blank">
+                    <img src="/images/misc/youtubeLogo.png" alt="Elvebredd Youtube">
+                </a>
+                <a id="di" href="https://discord.gg/Byny894ZQP" target="_blank">
+                    <img src="/images/misc/discordLogo.png" alt="Discord server">
+                </a>
+                <a id="ro" href="https://www.roblox.com/groups/7838569/Elvebred#!/about" target="_blank">
+                    <img src="/images/misc/robloxLogo.png" alt="Roblox server">
+                </a>
+            </div>
+            <div id="legalLinks">
+                <a href="/tos.html">Terms of Service</a>
+                <a href="/support.html">Support</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
