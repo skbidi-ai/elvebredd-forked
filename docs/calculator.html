@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="./css/footer.css">
     <link rel="stylesheet" href="./css/fonts.css">
     <script src="./config.js"></script>
-    <script src="./js/theme.js"></script>
-    <style>
+    <script src="./pets-data.js"></script>
         main {
             display: flex;
             justify-content: center;
@@ -367,83 +366,26 @@
     </footer>
 
     <script>
-        // Pet data with values
-        const petDatabase = {
-            pets: [
-                { name: 'Dragon', rarity: 'D', value: 500, image: '🐉', category: 'pets' },
-                { name: 'Phoenix', rarity: 'D', value: 450, image: '🔥', category: 'pets' },
-                { name: 'Giraffe', rarity: 'R', value: 300, image: '🦒', category: 'pets' },
-                { name: 'Panda', rarity: 'R', value: 250, image: '🐼', category: 'pets' },
-                { name: 'Butterfly', rarity: 'F', value: 100, image: '🦋', category: 'pets' },
-                { name: 'Parrot', rarity: 'R', value: 280, image: '🦜', category: 'pets' },
-                { name: 'Owl', rarity: 'N', value: 150, image: '🦉', category: 'pets' },
-                { name: 'Penguin', rarity: 'N', value: 120, image: '🐧', category: 'pets' },
-                { name: 'Ladybug', rarity: 'F', value: 80, image: '🐞', category: 'pets' },
-                { name: 'Bee', rarity: 'R', value: 200, image: '🐝', category: 'pets' },
-                { name: 'Unicorn', rarity: 'D', value: 550, image: '🦄', category: 'pets' },
-                { name: 'Tiger', rarity: 'R', value: 320, image: '🐯', category: 'pets' },
-            ],
-            eggs: [
-                { name: 'Golden Egg', rarity: 'D', value: 600, image: '🥚', category: 'eggs' },
-                { name: 'Diamond Egg', rarity: 'D', value: 700, image: '🥚', category: 'eggs' },
-                { name: 'Cracked Egg', rarity: 'F', value: 50, image: '🥚', category: 'eggs' },
-            ],
-            vehicles: [
-                { name: 'Car', rarity: 'N', value: 300, image: '🚗', category: 'vehicles' },
-                { name: 'Bike', rarity: 'R', value: 400, image: '🏍️', category: 'vehicles' },
-                { name: 'Hoverboard', rarity: 'D', value: 550, image: '🛹', category: 'vehicles' },
-            ],
-            wear: [
-                { name: 'Collar', rarity: 'N', value: 100, image: '👕', category: 'wear' },
-                { name: 'Hat', rarity: 'R', value: 200, image: '🎩', category: 'wear' },
-                { name: 'Wings', rarity: 'D', value: 400, image: '👼', category: 'wear' },
-            ],
-            other: [
-                { name: 'Gift', rarity: 'N', value: 150, image: '🎁', category: 'other' },
-                { name: 'Money Bag', rarity: 'R', value: 350, image: '💰', category: 'other' },
-            ],
-            food: [
-                { name: 'Apple', rarity: 'F', value: 50, image: '🍎', category: 'food' },
-                { name: 'Carrot', rarity: 'F', value: 60, image: '🥕', category: 'food' },
-            ]
-        };
-
+        // Pet database is loaded from pets-data.js
         let selectedItems = [];
         let currentCategory = 'all';
-        let currentRarity = 'D';
-
-        function getAllItems() {
-            return Object.values(petDatabase).flat();
-        }
-
-        function filterByCategory(category) {
-            currentCategory = category;
-            updateCategoryButtons(category);
-            renderItems();
-        }
-
-        function updateCategoryButtons(active) {
-            document.querySelectorAll('.category-btn').forEach((btn, idx) => {
-                btn.classList.remove('active');
-                if (idx === 0 && active === 'all') btn.classList.add('active');
-                else if (idx === 1 && active === 'all') btn.classList.add('active');
-                else if (btn.textContent.toLowerCase().includes(active)) btn.classList.add('active');
-            });
-        }
 
         function renderItems() {
             const grid = document.getElementById('itemsGrid');
             grid.innerHTML = '';
 
-            let items = currentCategory === 'all' ? getAllItems() : petDatabase[currentCategory] || [];
-
-            items.forEach(item => {
+            petDatabase.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'item-card';
                 if (selectedItems.find(i => i.name === item.name)) {
                     card.classList.add('selected');
                 }
-                card.innerHTML = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='middle'%3E${item.image}%3C/text%3E%3C/svg%3E" alt="${item.name}">`;
+                card.innerHTML = item.name.substring(0, 3).toUpperCase();
+                card.style.display = 'flex';
+                card.style.alignItems = 'center';
+                card.style.justifyContent = 'center';
+                card.style.fontSize = '14px';
+                card.style.fontWeight = 'bold';
                 card.onclick = () => toggleItem(item);
                 grid.appendChild(card);
             });
@@ -462,25 +404,23 @@
 
         function updateTotal() {
             const total = selectedItems.reduce((sum, item) => sum + item.value, 0);
-            document.getElementById('totalValue').textContent = total.toLocaleString();
+            document.getElementById('totalValue').textContent = total;
             
             const display = document.getElementById('selectedItemsDisplay');
             display.innerHTML = selectedItems.map(item => `
                 <div class="selected-item-tag">
                     ${item.name} (${item.value})
-                    <span class="remove-tag" onclick="removeItem('${item.name}')">✕</span>
                 </div>
             `).join('');
         }
 
-        function removeItem(name) {
-            selectedItems = selectedItems.filter(i => i.name !== name);
-            updateTotal();
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            // For now, just show all items
             renderItems();
         }
 
         function setRarity(rarity) {
-            currentRarity = rarity;
             document.querySelectorAll('.rarity-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -492,17 +432,27 @@
             const grid = document.getElementById('itemsGrid');
             grid.innerHTML = '';
 
-            let items = getAllItems().filter(item => 
+            const filtered = petDatabase.filter(item => 
                 item.name.toLowerCase().includes(query)
             );
 
-            items.forEach(item => {
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">No items found</p>';
+                return;
+            }
+
+            filtered.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'item-card';
                 if (selectedItems.find(i => i.name === item.name)) {
                     card.classList.add('selected');
                 }
-                card.innerHTML = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='middle'%3E${item.image}%3C/text%3E%3C/svg%3E" alt="${item.name}">`;
+                card.innerHTML = item.name.substring(0, 3).toUpperCase();
+                card.style.display = 'flex';
+                card.style.alignItems = 'center';
+                card.style.justifyContent = 'center';
+                card.style.fontSize = '14px';
+                card.style.fontWeight = 'bold';
                 card.onclick = () => toggleItem(item);
                 grid.appendChild(card);
             });
@@ -513,9 +463,11 @@
             renderItems();
         }
 
-        // Initialize
-        renderItems();
-        updateTotal();
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderItems();
+            updateTotal();
+        });
     </script>
 </body>
 </html>
