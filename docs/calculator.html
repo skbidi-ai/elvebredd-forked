@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Value Calculator - Elvebredd</title>
+    <link rel="stylesheet" href="https://use.typekit.net/uju1lhj.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/footer.css">
+    <link rel="stylesheet" href="./css/fonts.css">
+    <script src="./config.js"></script>
+    <script src="./js/theme.js"></script>
+    <style>
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        }
+
+        .calculator-container {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 30px;
+        }
+
+        .categories-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 200px;
+        }
+
+        .category-btn {
+            padding: 12px 20px;
+            border: 2px solid #ccc;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 16px;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: #999;
+        }
+
+        .category-btn.active {
+            border-color: #333;
+            color: #333;
+            background: #f0f0f0;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        .search-btn {
+            padding: 14px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .search-btn:hover {
+            border-color: #666;
+        }
+
+        .close-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            border-color: #666;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .item-card {
+            aspect-ratio: 1;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s;
+            padding: 10px;
+        }
+
+        .item-card:hover {
+            border-color: #999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .item-card.selected {
+            border-color: #ff6b4a;
+            background: #fff0eb;
+            box-shadow: 0 4px 12px rgba(255, 107, 74, 0.3);
+        }
+
+        .item-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .rarity-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .rarity-btn {
+            width: 60px;
+            height: 50px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .rarity-btn:hover {
+            border-color: #999;
+        }
+
+        .rarity-btn.active {
+            background: #ff6b4a;
+            color: white;
+            border-color: #ff6b4a;
+        }
+
+        .rarity-labels {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .rarity-label {
+            width: 60px;
+            text-align: center;
+        }
+
+        .result-panel {
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .selected-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .selected-item-tag {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 6px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remove-tag {
+            cursor: pointer;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .recommended-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                flex-direction: column;
+            }
+
+            .categories-panel {
+                min-width: auto;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="center headerElement auto" style="padding-left:70rem;">
+                <button onclick="openMenuBar()" title="menu" class="center blank button lightHover">
+                    <img id="menuImage" alt="menu" src="./images/misc/menu.png">
+                </button>
+            </div>
+            <div class="center headerElement auto" style="position:absolute;left:50vw;transform:translateX(-50%)">
+                <button class="blank button lightHover">
+                    <a class="bland" href="./index.html">
+                        <img id="headerLogo" src="./images/misc/logo.png">
+                    </a>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calculator-container">
+            <!-- Categories Panel -->
+            <div class="categories-panel">
+                <button class="category-btn active" onclick="filterByCategory('all')">Standard</button>
+                <button class="category-btn" onclick="filterByCategory('all')">All</button>
+                <button class="category-btn" onclick="filterByCategory('pets')">Pets</button>
+                <button class="category-btn" onclick="filterByCategory('eggs')">Eggs</button>
+                <button class="category-btn" onclick="filterByCategory('vehicles')">Vehicles</button>
+                <button class="category-btn" onclick="filterByCategory('wear')">Pet Wear</button>
+                <button class="category-btn" onclick="filterByCategory('other')">Other</button>
+                <button class="category-btn" onclick="filterByCategory('food')">Food</button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search" onkeyup="searchItems()">
+                    <button class="search-btn" onclick="searchItems()">🔍</button>
+                    <button class="close-btn" onclick="clearSearch()">✕</button>
+                </div>
+
+                <!-- Items Grid -->
+                <div class="items-grid" id="itemsGrid">
+                    <!-- Items will be loaded here -->
+                </div>
+
+                <!-- Rarity Buttons -->
+                <div class="rarity-buttons">
+                    <button class="rarity-btn" onclick="setRarity('F')">F</button>
+                    <button class="rarity-btn" onclick="setRarity('R')">R</button>
+                    <button class="rarity-btn active" onclick="setRarity('D')">D</button>
+                    <button class="rarity-btn" onclick="setRarity('N')">N</button>
+                    <button class="rarity-btn" onclick="setRarity('M')">M</button>
+                </div>
+                <div class="rarity-labels">
+                    <div class="rarity-label">Fly</div>
+                    <div class="rarity-label">Ride</div>
+                    <div class="rarity-label">Demand</div>
+                    <div class="rarity-label">Normal</div>
+                    <div class="rarity-label">Mega</div>
+                </div>
+
+                <!-- Result Panel -->
+                <div class="result-panel">
+                    <div class="result-title">TOTAL VALUE</div>
+                    <div class="result-value" id="totalValue">0</div>
+                    <div class="selected-items" id="selectedItemsDisplay"></div>
+                </div>
+
+                <!-- Recommended Section -->
+                <div class="recommended-section">
+                    <div class="section-title">RECOMMENDED</div>
+                    <div class="items-grid" id="recommendedGrid">
+                        <!-- Recommended items will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div id="linkSection">
+            <div id="legalLinks">
+                <a href="./tos.html">Terms of Service</a>
+                <a href="./support.html">Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Pet data with values
+        const petDatabase = {
+            pets: [
+                { name: 'Dragon', rarity: 'D', value: 500, image: '🐉', category: 'pets' },
+                { name: 'Phoenix', rarity: 'D', value: 450, image: '🔥', category: 'pets' },
+                { name: 'Giraffe', rarity: 'R', value: 300, image: '🦒', category: 'pets' },
+                { name: 'Panda', rarity: 'R', value: 250, image: '🐼', category: 'pets' },
+                { name: 'Butterfly', rarity: 'F', value: 100, image: '🦋', category: 'pets' },
+                { name: 'Parrot', rarity: 'R', value: 280, image: '🦜', category: 'pets' },
+                { name: 'Owl', rarity: 'N', value: 150, image: '🦉', category: 'pets' },
+                { name: 'Penguin', rarity: 'N', value: 120, image: '🐧', category: 'pets' },
+                { name: 'Ladybug', rarity: 'F', value: 80, image: '🐞', category: 'pets' },
+                { name: 'Bee', rarity: 'R', value: 200, image: '🐝', category: 'pets' },
+                { name: 'Unicorn', rarity: 'D', value: 550, image: '🦄', category: 'pets' },
+                { name: 'Tiger', rarity: 'R', value: 320, image: '🐯', category: 'pets' },
+            ],
+            eggs: [
+                { name: 'Golden Egg', rarity: 'D', value: 600, image: '🥚', category: 'eggs' },
+                { name: 'Diamond Egg', rarity: 'D', value: 700, image: '🥚', category: 'eggs' },
+                { name: 'Cracked Egg', rarity: 'F', value: 50, image: '🥚', category: 'eggs' },
+            ],
+            vehicles: [
+                { name: 'Car', rarity: 'N', value: 300, image: '🚗', category: 'vehicles' },
+                { name: 'Bike', rarity: 'R', value: 400, image: '🏍️', category: 'vehicles' },
+                { name: 'Hoverboard', rarity: 'D', value: 550, image: '🛹', category: 'vehicles' },
+            ],
+            wear: [
+                { name: 'Collar', rarity: 'N', value: 100, image: '👕', category: 'wear' },
+                { name: 'Hat', rarity: 'R', value: 200, image: '🎩', category: 'wear' },
+                { name: 'Wings', rarity: 'D', value: 400, image: '👼', category: 'wear' },
+            ],
+            other: [
+                { name: 'Gift', rarity: 'N', value: 150, image: '🎁', category: 'other' },
+                { name: 'Money Bag', rarity: 'R', value: 350, image: '💰', category: 'other' },
+            ],
+            food: [
+                { name: 'Apple', rarity: 'F', value: 50, image: '🍎', category: 'food' },
+                { name: 'Carrot', rarity: 'F', value: 60, image: '🥕', category: 'food' },
+            ]
+        };
+
+        let selectedItems = [];
+        let currentCategory = 'all';
+        let currentRarity = 'D';
+
+        function getAllItems() {
+            return Object.values(petDatabase).flat();
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            updateCategoryButtons(category);
+            renderItems();
+        }
+
+        function updateCategoryButtons(active) {
+            document.querySelectorAll('.category-btn').forEach((btn, idx) => {
+                btn.classList.remove('active');
+                if (idx === 0 && active === 'all') btn.classList.add('active');
+                else if (idx === 1 && active === 'all') btn.classList.add('active');
+                else if (btn.textContent.toLowerCase().includes(active)) btn.classList.add('active');
+            });
+        }
+
+        function renderItems() {
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+
+            let items = currentCategory === 'all' ? getAllItems() : petDatabase[currentCategory] || [];
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                if (selectedItems.find(i => i.name === item.name)) {
+                    card.classList.add('selected');
+                }
+                card.innerHTML = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='middle'%3E${item.image}%3C/text%3E%3C/svg%3E" alt="${item.name}">`;
+                card.onclick = () => toggleItem(item);
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleItem(item) {
+            const index = selectedItems.findIndex(i => i.name === item.name);
+            if (index > -1) {
+                selectedItems.splice(index, 1);
+            } else {
+                selectedItems.push(item);
+            }
+            updateTotal();
+            renderItems();
+        }
+
+        function updateTotal() {
+            const total = selectedItems.reduce((sum, item) => sum + item.value, 0);
+            document.getElementById('totalValue').textContent = total.toLocaleString();
+            
+            const display = document.getElementById('selectedItemsDisplay');
+            display.innerHTML = selectedItems.map(item => `
+                <div class="selected-item-tag">
+                    ${item.name} (${item.value})
+                    <span class="remove-tag" onclick="removeItem('${item.name}')">✕</span>
+                </div>
+            `).join('');
+        }
+
+        function removeItem(name) {
+            selectedItems = selectedItems.filter(i => i.name !== name);
+            updateTotal();
+            renderItems();
+        }
+
+        function setRarity(rarity) {
+            currentRarity = rarity;
+            document.querySelectorAll('.rarity-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function searchItems() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+
+            let items = getAllItems().filter(item => 
+                item.name.toLowerCase().includes(query)
+            );
+
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                if (selectedItems.find(i => i.name === item.name)) {
+                    card.classList.add('selected');
+                }
+                card.innerHTML = `<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='50' font-size='80' text-anchor='middle' dominant-baseline='middle'%3E${item.image}%3C/text%3E%3C/svg%3E" alt="${item.name}">`;
+                card.onclick = () => toggleItem(item);
+                grid.appendChild(card);
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderItems();
+        }
+
+        // Initialize
+        renderItems();
+        updateTotal();
+    </script>
+</body>
+</html>
