@@ -63,6 +63,11 @@ async function apiCall(endpoint, method = 'GET', data = null) {
 
 // Navigation helper
 function goTo(path) {
+    // Handle relative paths for GitHub Pages subdirectory
+    if (!path.startsWith('http')) {
+        const basePath = window.location.pathname.split('/elvebredd-forked')[0] + '/elvebredd-forked';
+        path = basePath + path;
+    }
     window.location.href = path;
 }
 
